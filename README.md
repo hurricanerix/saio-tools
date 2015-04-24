@@ -9,8 +9,50 @@ Summary of tools
 
 command | description
 ------------- | -------------
+saio-tools-formpost  | FormPOST objects to Swift.
 saio-tools-slo  | Creates static large objects.
 saio-tools-txtime | Converts transaction IDs to time formats.
+
+
+saio-tools-formpost
+-------------------
+```
+$ saio-tools-formpost --help
+usage: saio-tools-formpost [-h] [--url URL] [--verbose] [--signature-only]
+                           [--boundry BOUNDRY] [--redirect REDIRECT]
+                           [--max-file-size MAX_FILE_SIZE]
+                           [--max-file-count MAX_FILE_COUNT]
+                           [--expires EXPIRES] [--expires-in EXPIRES_IN]
+                           [--signature SIGNATURE] [--key KEY] [--version]
+                           [files [files ...]]
+
+Swift FormPOST Utility to use the FormPOST feature to POST files to Swift.
+
+positional arguments:
+  files                 Files to be posted in the form.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --url URL, -u URL     URL to post files to.
+  --verbose, -v         Print info to stderr.
+  --signature-only      Don't POST data, just create a signature.
+  --boundry BOUNDRY     Boundry to use in the generated form.
+  --redirect REDIRECT, -r REDIRECT
+                        Form redirect URL.
+  --max-file-size MAX_FILE_SIZE, -s MAX_FILE_SIZE
+                        Form max file size.
+  --max-file-count MAX_FILE_COUNT, -c MAX_FILE_COUNT
+                        Form max file count.
+  --expires EXPIRES, -e EXPIRES
+                        Form expires timestamp.
+  --expires-in EXPIRES_IN
+                        Expires in <seconds>, to be converted to the expires
+                        timestamp.
+  --signature SIGNATURE
+                        Form signature to use.
+  --key KEY             TempURL key to be used in creating the form signature.
+  --version             Show version info.
+```
 
 saio-tools-slo
 --------------

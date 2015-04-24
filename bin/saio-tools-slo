@@ -178,6 +178,8 @@ def main():
         help='Show version info.')
 
     args = vars(parser.parse_args())
+    if args.get('verbose'):
+        logger.setLevel(logging.DEBUG)
 
     monkey.patch_all()
 
@@ -187,8 +189,6 @@ def main():
                         'was not intended.')
 
     storage_url = args.get('storage_url')
-    if args.get('verbose'):
-        logger.setLevel(logging.DEBUG)
 
     t = calendar.timegm(time.gmtime())
 

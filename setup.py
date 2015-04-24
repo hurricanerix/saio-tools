@@ -38,5 +38,6 @@ setup(
         ],
     install_requires=[],
     scripts=['bin/saio-tools-slo',
-             'bin/saio-tools-txtime']
+             'bin/saio-tools-txtime',
+             'bin/saio-tools-formpost']
 )

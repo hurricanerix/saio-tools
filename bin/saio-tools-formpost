@@ -1,0 +1,239 @@
+#!/usr/bin/env python
+
+# Copyright (c) 2015 Richard Hawkins
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import argparse
+import hashlib
+import hmac
+import logging
+import os
+import sys
+import time
+import urlparse
+
+import requests
+
+import saio_tools
+
+
+__version__ = '0.0'
+
+
+logging.basicConfig()
+logger = logging.getLogger('saio-tools-formpost')
+
+
+def formpost(url, path, redirect, max_file_size, max_file_count, expires,
+             signature, files, boundry):
+    """FormPOST."""
+    logger.debug('---FormPOST---')
+    logger.debug('URL: {0}'.format(url))
+    logger.debug('Path: {0}'.format(path))
+    logger.debug('Redirect: {0}'.format(redirect))
+    logger.debug('Max File Size: {0}'.format(max_file_size))
+    logger.debug('Max File Count: {0}'.format(max_file_count))
+    logger.debug('Expires: {0}'.format(expires))
+    logger.debug('Signature: {0}'.format(signature))
+    logger.debug('Files: {0}'.format(', '.join(files)))
+    logger.debug('Boundry: {0}'.format(boundry))
+    form = []
+
+    if redirect != '':
+        form.append({
+            'headers': {'Content-Disposition': 'form-data; name="redirect"'},
+            'data': redirect})
+    form.append({
+        'headers': {'Content-Disposition': 'form-data; name="max_file_size"'},
+        'data': str(max_file_size)})
+    form.append({
+        'headers': {'Content-Disposition': 'form-data; name="max_file_count"'},
+        'data': str(max_file_count)})
+    form.append({
+        'headers': {'Content-Disposition': 'form-data; name="expires"'},
+        'data': str(expires)})
+    form.append({
+        'headers': {'Content-Disposition': 'form-data; name="signature"'},
+        'data': signature})
+    for i in xrange(len(files)):
+        f = open(files[i], 'r')
+        form.append({
+            'headers': {'Content-Disposition':
+                        'form-data; name="file{0}"; filename="{1}"'.format(
+                            i + 1, files[i]),
+                        'Content-Type': 'application/octet-stream'},
+            'data': f.read()})
+
+    data = []
+
+    post_headers = {
+        'Cache-Control': 'max-age=0',
+        'Accept': '*/*;q=0.8',
+        'Origin': 'http://example.com',
+        'User-Agent': 'python',
+        'Content-Type': 'multipart/form-data; boundary={0}'.format(
+            boundry),
+    }
+
+    for section in form:
+        data.append('--{0}\r\n'.format(boundry))
+        for key, value in section['headers'].iteritems():
+            data.append('{0}: {1}\r\n'.format(key, value))
+        data.append('\r\n')
+        data.append(section['data'])
+        data.append('\r\n')
+    data.append('\r\n--{0}'.format(boundry))
+
+    post_headers['Content-Length'] = len(''.join(data))
+
+    resp = requests.post(url, headers=post_headers, data=''.join(data),
+                         verify=False, allow_redirects=False)
+    logger.debug('Status Code: {0}'.format(resp.status_code))
+    logger.debug('Trans ID: {0}'.format(resp.headers.get('X-Trans-Id')))
+    if resp.status_code == 201:
+        print("Created")
+    elif resp.status_code == 303:
+        print('Redirect: {0}'.format(resp.headers.get('location')))
+    else:
+        print(resp.content)
+        exit(1)
+
+
+def get_path(url):
+    """Get the full path to be used in the form."""
+    logger.debug('---Get Form Path---')
+    logger.debug('URL: {0}'.format(url))
+    path = urlparse.urlparse(url).path
+    logger.debug('Path: {0}'.format(path))
+    return path
+
+
+def get_expires(expires_in):
+    """Get the timestamp to expire the format at."""
+    logger.debug('---Get Expires---')
+    logger.debug('Expires In: {0}'.format(expires_in))
+    expires = int(time.time() + expires_in)
+    logger.debug('Expires: {0}'.format(expires))
+    return expires
+
+
+def get_signature(path, redirect, max_file_count, max_file_size, expires, key):
+    """Create the signature for a FormPOST."""
+    logger.debug('---Creating Signature---')
+    logger.debug('Path: {0}'.format(path))
+    logger.debug('Redirect: {0}'.format(redirect))
+    logger.debug('Max File Count: {0}'.format(max_file_count))
+    logger.debug('Max File Size: {0}'.format(max_file_size))
+    logger.debug('Expires: {0}'.format(expires))
+    logger.debug('TempURL Key: {0}'.format(key))
+
+    hmac_body = '{0}\n{1}\n{2}\n{3}\n{4}'.format(
+        path, redirect, max_file_size, max_file_count, expires)
+    sig = hmac.new(key, hmac_body, hashlib.sha1).hexdigest()
+    logger.debug('Signature: {0}'.format(sig))
+    return sig
+
+
+def main():
+    """Swift FormPOST
+
+       Utility to use the FormPOST feature to POST files to Swift.
+    """
+    parser = argparse.ArgumentParser(
+        description=' '.join(main.__doc__.split()))
+
+    parser.add_argument(
+        '--url', '-u',
+        default='http://127.0.0.1:8080/v1/AUTH_test/formpost',
+        help='URL to post files to.')
+    parser.add_argument(
+        '--verbose', '-v',
+        default=False, action='store_true',
+        help='Print info to stderr.')
+    parser.add_argument(
+        '--signature-only',
+        default=False, action='store_true',
+        help='Don\'t POST data, just create a signature.')
+    parser.add_argument(
+        '--boundry',
+        default='----WebKitFormBoundary40Q4WaJHO84PBBIa',
+        help='Boundry to use in the generated form.')
+
+    parser.add_argument(
+        '--redirect', '-r',
+        default='',
+        help='Form redirect URL.')
+    parser.add_argument(
+        '--max-file-size', '-s',
+        type=int, default=1024,
+        help='Form max file size.')
+    parser.add_argument(
+        '--max-file-count', '-c',
+        type=int, default=10,
+        help='Form max file count.')
+    parser.add_argument(
+        '--expires', '-e',
+        type=int, default=None,
+        help='Form expires timestamp.')
+    parser.add_argument(
+        '--expires-in',
+        type=int, default=120,
+        help='Expires in <seconds>, to be converted to the expires timestamp.')
+    parser.add_argument(
+        'files', nargs='*',
+        help='Files to be posted in the form.')
+
+    parser.add_argument(
+        '--signature',
+        default=None,
+        help='Form signature to use.')
+    parser.add_argument(
+        '--key',
+        default=os.environ.get('ST_TEMP_URL_KEY'),
+        help='TempURL key to be used in creating the form signature.'
+             'If none is provided, the environment variable'
+             'ST_TEMP_URL_KEY will be used.')
+    parser.add_argument(
+        '--version', action='version',
+        version=saio_tools.get_version(__version__),
+        help='Show version info.')
+
+    args = parser.parse_args()
+    if args.verbose:
+        logger.setLevel(logging.DEBUG)
+
+    if args.key is None:
+        logging.warning('TempURL Key was not provided, please see help if this'
+                        'was not intended.')
+        args.key = ''
+
+    path = get_path(args.url)
+    redirect = args.redirect
+    max_file_size = args.max_file_size
+    max_file_count = args.max_file_count
+
+    expires = args.expires or get_expires(args.expires_in)
+    signature = args.signature or get_signature(
+        path, redirect, max_file_count, max_file_size, expires, args.key)
+
+    if args.signature_only:
+        print(signature)
+        exit(0)
+
+    formpost(args.url, path, redirect, max_file_size, max_file_count, expires,
+             signature, args.files, args.boundry)
+
+if __name__ == '__main__':
+    main()
