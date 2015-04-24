@@ -37,5 +37,6 @@ setup(
         'Environment :: OpenStack',
         ],
     install_requires=[],
-    scripts=['bin/saio-tools-slo']
+    scripts=['bin/saio-tools-slo',
+             'bin/saio-tools-txtime']
 )

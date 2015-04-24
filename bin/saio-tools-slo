@@ -72,18 +72,19 @@ def concurrent_requests(concurrency, reqs, resp=None):
         resp = []
     pool = Pool(concurrency)
     jobs = [pool.spawn(make_request, m, u, h, p, d, resp)
-            for m, u, h, p, d, in reqs] 
+            for m, u, h, p, d, in reqs]
     pool.join()
 
 
-def create_segments(storage_url, token, objects, concurrency=10, delete_after=300):
+def create_segments(storage_url, token, objects, concurrency=10,
+                    delete_after=300):
     data = []
 
     container_requests = []
     object_requests = []
 
     for c, o, s in objects:
-        headers={'x-auth-token': token}
+        headers = {'x-auth-token': token}
         container_url = '{0}/{1}'.format(storage_url, c)
         container_requests.append(('PUT', container_url, headers, {}, None))
 
@@ -172,14 +173,11 @@ def main():
         '--verbose', action='store_true', default=False,
         help='Show verbose info.')
     parser.add_argument(
-        '--version', action='store_true', default=False,
+        '--version', action='version',
+        version=saio_tools.get_version(__version__),
         help='Show version info.')
 
     args = vars(parser.parse_args())
-    if args.get('version'):
-        print 'saio-tools version: {}'.format(saio_tools.__version__)
-        print 'saio-tools-slo version: {}'.format(__version__)
-        exit(0)
 
     monkey.patch_all()
 
@@ -204,8 +202,8 @@ def main():
                 for i in xrange(args.get('segment_count'))]
 
     segment_data = create_segments(storage_url, token, segments,
-                                  delete_after=args.get('delete_after'),
-                                  concurrency=args.get('concurrency'))
+                                   delete_after=args.get('delete_after'),
+                                   concurrency=args.get('concurrency'))
     create_slo(storage_url, token, manifest, segment_data,
                delete_after=args.get('delete_after'))
 

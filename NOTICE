@@ -1,0 +1,6 @@
+Notice
+======
+
+/bin/saio-tools-txtime
+----------------------
+Includes code borrowed from David Goetz: https://github.com/dpgoetz/tcod/blob/master/txtime

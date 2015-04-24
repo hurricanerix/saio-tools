@@ -10,7 +10,7 @@ Summary of tools
 command | description
 ------------- | -------------
 saio-tools-slo  | Creates static large objects.
-
+saio-tools-txtime | Converts transaction IDs to time formats.
 
 saio-tools-slo
 --------------
@@ -49,4 +49,22 @@ optional arguments:
                         before the program terminates.
   --verbose             Show verbose info.
   --version             Show version info.
+```
+
+saio-tools-txtime
+-----------------
+```
+$ saio-tools-txtime --help
+usage: saio-tools-txtime [-h] [--unix] [--version] txid
+
+Converts Swift Transaction IDs to time formats.
+
+positional arguments:
+  txid        Auth token to use when making requests.If none is provided, the
+              environment variableST_TOKEN will be used.
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --unix, -u  Display as UNIX timestamp.
+  --version   Show version info.
 ```

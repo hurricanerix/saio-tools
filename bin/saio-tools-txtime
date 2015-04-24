@@ -1,0 +1,58 @@
+#!/usr/bin/env python
+
+# Copyright (c) 2015 Richard Hawkins
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import argparse
+import sys
+import time
+
+import swift.common.utils
+
+import saio_tools
+
+
+__version__ = '0.0'
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='Converts Swift Transaction IDs to time formats.')
+    parser.add_argument(
+        'txid',
+        help='Auth token to use when making requests.'
+             'If none is provided, the environment variable'
+             'ST_TOKEN will be used.')
+    parser.add_argument(
+        '--unix', '-u', action='store_true',
+        help='Display as UNIX timestamp.')
+    parser.add_argument(
+        '--version', action='version',
+        version=saio_tools.get_version(__version__),
+        help='Show version info.')
+
+    args = vars(parser.parse_args())
+
+    txid = args.get('txid')
+    t = swift.common.utils.get_trans_id_time(txid)
+
+    if args.get('unix'):
+        print t
+    else:
+        print time.asctime(time.gmtime(t))
+
+
+if __name__ == '__main__':
+    main()
