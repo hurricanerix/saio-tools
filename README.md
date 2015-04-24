@@ -15,11 +15,13 @@ saio-tools-slo  | Creates static large objects.
 saio-tools-slo
 --------------
 ```
-$ ./bin/saio-tools-slo --help
-usage: saio-tools-slo [-h] [--storage-url STORAGE_URL] [--prefix PREFIX]
+$ saio-tools-slo --help
+usage: saio-tools-slo [-h] [--concurrency CONCURRENCY]
+                      [--storage-url STORAGE_URL] [--prefix PREFIX]
                       [--delete-after DELETE_AFTER]
                       [--segment-count SEGMENT_COUNT]
                       [--segment-size SEGMENT_SIZE] [--cleanup] [--verbose]
+                      [--version]
                       [token]
 
 SAIO Tools Static Large Object Helper.
@@ -31,6 +33,8 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
+  --concurrency CONCURRENCY, -c CONCURRENCY
+                        Number of concurrent request to make at a time.
   --storage-url STORAGE_URL
                         URL to account to create data in.
   --prefix PREFIX       Container prefix for created containers.
@@ -44,4 +48,5 @@ optional arguments:
   --cleanup             If set, created containers and objects will be removed
                         before the program terminates.
   --verbose             Show verbose info.
+  --version             Show version info.
 ```
