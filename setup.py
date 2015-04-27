@@ -15,7 +15,7 @@
 
 from setuptools import setup, find_packages
 
-from saio_tools import __version__ as version
+from saio_tools import __tools_version__ as version
 
 name = 'saio-tools'
 
@@ -37,7 +37,9 @@ setup(
         'Environment :: OpenStack',
         ],
     install_requires=[],
-    scripts=['bin/saio-tools-slo',
+    scripts=['bin/swiftly-',
+             'bin/saio-tools-slo',
              'bin/saio-tools-txtime',
+             'bin/saio-tools-tempurl',
              'bin/saio-tools-formpost']
 )

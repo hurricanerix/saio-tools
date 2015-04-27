@@ -12,6 +12,7 @@ command | description
 saio-tools-formpost  | FormPOST objects to Swift.
 saio-tools-slo  | Creates static large objects.
 saio-tools-txtime | Converts transaction IDs to time formats.
+swiftly- | Wrapper for [swiftly](https://github.com/gholt/swiftly) to invoke via configs.
 
 
 saio-tools-formpost
@@ -109,4 +110,36 @@ optional arguments:
   -h, --help  show this help message and exit
   --unix, -u  Display as UNIX timestamp.
   --version   Show version info.
+```
+
+swiftly-
+--------
+
+Simple wrapper for [swiftly](https://github.com/gholt/swiftly), allowing
+credentials to be stored in config files.
+
+Create a config for your SAIO.
+
+```
+$ mkdir -p ~/.swift_accounts
+$ cat ~/.swift_accounts/saio.config
+[keystoneclient]
+auth_url=http://127.0.0.1:8080/auth/v1.0
+user=test:tester
+key=testing
+```
+
+Example HEAD request w/ swiftly-
+
+```
+$ swiftly- saio head
+X-Account-Bytes-Used:                          0
+X-Account-Container-Count:                     10
+X-Account-Meta-Temp-Url-Key:                   SecretKey
+X-Account-Object-Count:                        0
+X-Account-Storage-Policy-Gold-Bytes-Used:      0
+X-Account-Storage-Policy-Gold-Container-Count: 10
+X-Account-Storage-Policy-Gold-Object-Count:    0
+X-Timestamp:                                   1429634838.39854
+X-Trans-Id:                                    tx215dbf27ac49444c92790-00553e8ffd
 ```
