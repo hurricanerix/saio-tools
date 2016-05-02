@@ -1,0 +1,47 @@
+diff --git a/swift/common/constraints.py b/swift/common/constraints.py
+index 451e745..7783856 100644
+--- a/swift/common/constraints.py
++++ b/swift/common/constraints.py
+@@ -318,9 +318,9 @@ def check_delete_headers(request):
+             raise HTTPBadRequest(request=request, content_type='text/plain',
+                                  body='Non-integer X-Delete-At')
+ 
+-        if x_delete_at < time.time():
+-            raise HTTPBadRequest(request=request, content_type='text/plain',
+-                                 body='X-Delete-At in past')
++        #if x_delete_at < time.time():
++        #    raise HTTPBadRequest(request=request, content_type='text/plain',
++        #                         body='X-Delete-At in past')
+     return request
+ 
+ 
+diff --git a/swift/obj/server.py b/swift/obj/server.py
+index e59c9fb..d34946e 100644
+--- a/swift/obj/server.py
++++ b/swift/obj/server.py
+@@ -465,9 +465,9 @@ class ObjectController(BaseStorageServer):
+             get_name_and_placement(request, 5, 5, True)
+         req_timestamp = valid_timestamp(request)
+         new_delete_at = int(request.headers.get('X-Delete-At') or 0)
+-        if new_delete_at and new_delete_at < time.time():
+-            return HTTPBadRequest(body='X-Delete-At in past', request=request,
+-                                  content_type='text/plain')
++        # if new_delete_at and new_delete_at < time.time():
++        #    return HTTPBadRequest(body='X-Delete-At in past', request=request,
++        #                          content_type='text/plain')
+         try:
+             disk_file = self.get_diskfile(
+                 device, partition, account, container, obj,
+@@ -592,9 +592,9 @@ class ObjectController(BaseStorageServer):
+         if error_response:
+             return error_response
+         new_delete_at = int(request.headers.get('X-Delete-At') or 0)
+-        if new_delete_at and new_delete_at < time.time():
+-            return HTTPBadRequest(body='X-Delete-At in past', request=request,
+-                                  content_type='text/plain')
++        # if new_delete_at and new_delete_at < time.time():
++        #    return HTTPBadRequest(body='X-Delete-At in past', request=request,
++        #                          content_type='text/plain')
+         try:
+             fsize = request.message_length()
+         except ValueError as e:
