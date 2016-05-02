@@ -33,8 +33,6 @@ import requests
 import saio_tools
 
 
-__version__ = '0.0'
-
 DEFAULT_MIN_SEGMENT_SIZE = 1024 * 1024  # 1 MiB
 
 logging.basicConfig()
@@ -172,10 +170,6 @@ def main():
     parser.add_argument(
         '--verbose', action='store_true', default=False,
         help='Show verbose info.')
-    parser.add_argument(
-        '--version', action='version',
-        version=saio_tools.get_version(__version__),
-        help='Show version info.')
 
     args = vars(parser.parse_args())
     if args.get('verbose'):

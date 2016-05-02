@@ -30,8 +30,8 @@ To apply it:
 # TODO: show how to patch.
 ```
 
-create_expired_objects.py
--------------------------
+bin/st_create_expired_objects
+-----------------------------
 
 Once swift is patched to allow expired objects in the past, this script can be used to create expiring objects within a range.  By default the range contains a majority in the past, with some being in the future.
 
@@ -40,10 +40,10 @@ The only required argument is a valid token.  The most useful optional argument 
 The objects created, along with transaction ids and status codes will be written to a log file.
 
 ```
-$ ./create_expired_objects.py AUTH_tk93865e8770814490ba4f2079eb5ef2b7 --count=20
+$ ./st_create_expired_objects.py AUTH_tk93865e8770814490ba4f2079eb5ef2b7 --count=20
 ....................
 
-$ cat create_expired_objects.log
+$ cat st_create_expired_objects.log
 INFO:create_expired_objects:http://127.0.0.1:8080/v1/AUTH_test/test_exp/2016/04/24/19/119f1fc6-1263-464e-aeee-d63503856d76, txe7ac06ea7489443ebec92-0057223fcc, 201
 INFO:create_expired_objects:http://127.0.0.1:8080/v1/AUTH_test/test_exp/2016/04/26/19/ae4253bc-4af1-4418-ace7-f89cb3e3f66e, txccc5ccc168324d0199104-0057223fcc, 201
 INFO:create_expired_objects:http://127.0.0.1:8080/v1/AUTH_test/test_exp/2016/05/03/03/d106d7f6-d993-4eb9-a9c9-21bef8051eda, txd909a34e9b774b0dbfea6-0057223fcc, 201
@@ -56,10 +56,12 @@ INFO:create_expired_objects:http://127.0.0.1:8080/v1/AUTH_test/test_exp/2016/05/
 INFO:create_expired_objects:http://127.0.0.1:8080/v1/AUTH_test/test_exp/2016/04/25/15/1b895bf6-b65b-4a2c-8b7e-295d05d46097, tx31595a30400447ffa3293-0057223fcc, 201
 ```
 
-test_expired_objects.py
------------------------
+bin/st_test_expired_objects
+---------------------------
 
 Once you have created objects which need to be expired, this script can be used to test how long it takes for all the objects in the past to expire.
+
+TODO: write this tool
 
 ```Shell
 swift-init object-expirer start

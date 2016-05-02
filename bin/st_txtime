@@ -24,24 +24,15 @@ import swift.common.utils
 import saio_tools
 
 
-__version__ = '0.0'
-
-
 def main():
     parser = argparse.ArgumentParser(
         description='Converts Swift Transaction IDs to time formats.')
     parser.add_argument(
         'txid',
-        help='Auth token to use when making requests.'
-             'If none is provided, the environment variable'
-             'ST_TOKEN will be used.')
+        help='TXID to extract time from.')
     parser.add_argument(
         '--unix', '-u', action='store_true',
         help='Display as UNIX timestamp.')
-    parser.add_argument(
-        '--version', action='version',
-        version=saio_tools.get_version(__version__),
-        help='Show version info.')
 
     args = vars(parser.parse_args())
 

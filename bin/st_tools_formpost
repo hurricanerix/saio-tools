@@ -29,9 +29,6 @@ import requests
 import saio_tools
 
 
-__version__ = '0.0'
-
-
 logging.basicConfig()
 logger = logging.getLogger('saio-tools-formpost')
 
@@ -205,10 +202,6 @@ def main():
         help='TempURL key to be used in creating the form signature.'
              'If none is provided, the environment variable'
              'ST_TEMP_URL_KEY will be used.')
-    parser.add_argument(
-        '--version', action='version',
-        version=saio_tools.get_version(__version__),
-        help='Show version info.')
 
     args = parser.parse_args()
     if args.verbose:
