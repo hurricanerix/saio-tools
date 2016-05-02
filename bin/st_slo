@@ -30,8 +30,6 @@ from gevent import monkey
 from gevent.pool import Pool
 import requests
 
-import saio_tools
-
 
 DEFAULT_MIN_SEGMENT_SIZE = 1024 * 1024  # 1 MiB
 

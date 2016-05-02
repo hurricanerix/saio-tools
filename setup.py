@@ -15,19 +15,17 @@
 
 from setuptools import setup, find_packages
 
-from saio_tools import __tools_version__ as version
-
 name = 'saio-tools'
 
 setup(
     name=name,
-    version=version,
+    version=0.0,
     author='Richard Hawkins',
     author_email='hurricanerix@gmail.com',
-    description='SAIO dev tools',
+    description='Swift dev tools',
     license='Apache License (2.0)',
     keywords='openstack swift middleware',
-    url='http://github.com/hurricanerix/saio-tools',
+    url='http://github.com/hurricanerix/swift-tools',
     packages=find_packages(),
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -38,8 +36,9 @@ setup(
         ],
     install_requires=[],
     scripts=['bin/swiftly-',
-             'bin/saio-tools-slo',
-             'bin/saio-tools-txtime',
-             'bin/saio-tools-tempurl',
-             'bin/saio-tools-formpost']
+             'bin/st_expiring_create',
+             'bin/st_expiring_test',
+             'bin/st_slo',
+             'bin/st_tools_formpost',
+             'bin/st_txtime']
 )

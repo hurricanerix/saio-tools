@@ -21,8 +21,6 @@ import time
 
 import swift.common.utils
 
-import saio_tools
-
 
 def main():
     parser = argparse.ArgumentParser(

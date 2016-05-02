@@ -26,8 +26,6 @@ import urlparse
 
 import requests
 
-import saio_tools
-
 
 logging.basicConfig()
 logger = logging.getLogger('saio-tools-formpost')

@@ -1,2 +1,3 @@
 saio_tools.egg-info
 *.pyc
+*.log
