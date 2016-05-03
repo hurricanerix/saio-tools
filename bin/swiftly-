@@ -2,7 +2,7 @@
 # Swiftly helper tool.  Keep your credentials in configs.
 set -e
 
-TODO: modify to allow setting of env variables
+# TODO: modify to allow setting of env variables
 
 accounts_dir=${SWIFT_ACCOUNTS_DIR:="$HOME/.swift_accounts"}
 
